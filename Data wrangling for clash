@@ -1,0 +1,69 @@
+import pandas as pd
+import seaborn as sb
+import numpy as np
+df = pd.read_csv("Crashes_Last_Five_Years.csv")
+df.head(3)
+X	Y	OBJECTID	ACCIDENT_NO	ABS_CODE	ACCIDENT_STATUS	ACCIDENT_DATE	ACCIDENT_TIME	ALCOHOLTIME	ACCIDENT_TYPE	...	DEG_URBAN_ALL	LGA_NAME_ALL	REGION_NAME_ALL	SRNS	SRNS_ALL	RMA	RMA_ALL	DIVIDED	DIVIDED_ALL	STAT_DIV_NAME
+0	145.060690	-37.810373	2693452	T20120013207	ABS to receive accident	Finished	26/5/2012	11.40.00	No	Collision with vehicle	...	Metropolitan Excluding CBD	BOROONDARA	METROPOLITAN SOUTH EAST REGION	NaN	NaN	Arterial Other	Arterial Other	Undivided	Undivided	Metro
+1	144.991172	-37.883157	2693453	T20120013209	ABS to receive accident	Finished	6/6/2012	15.40.00	No	Collision with vehicle	...	Metropolitan Excluding CBD	PORT PHILLIP	METROPOLITAN NORTH WEST REGION	NaN	NaN	Arterial Other	Arterial Other,Local Road	Undivided	Undivided	Metro
+2	145.009458	-37.826952	2693454	T20120013212	ABS to receive accident	Finished	24/5/2012	09.00.00	No	Collision with vehicle	...	Metropolitan Excluding CBD	YARRA	METROPOLITAN NORTH WEST REGION	NaN	NaN	Arterial Other	Arterial Other,Local Road	Undivided	Undivided	Metro
+3 rows × 65 columns
+
+df.shape
+(76451, 65)
+df.columns
+Index([u'X', u'Y', u'OBJECTID', u'ACCIDENT_NO', u'ABS_CODE',
+       u'ACCIDENT_STATUS', u'ACCIDENT_DATE', u'ACCIDENT_TIME', u'ALCOHOLTIME',
+       u'ACCIDENT_TYPE', u'DAY_OF_WEEK', u'DCA_CODE', u'HIT_RUN_FLAG',
+       u'LIGHT_CONDITION', u'POLICE_ATTEND', u'ROAD_GEOMETRY', u'SEVERITY',
+       u'SPEED_ZONE', u'RUN_OFFROAD', u'NODE_ID', u'LONGITUDE', u'LATITUDE',
+       u'NODE_TYPE', u'LGA_NAME', u'REGION_NAME', u'VICGRID_X', u'VICGRID_Y',
+       u'TOTAL_PERSONS', u'INJ_OR_FATAL', u'FATALITY', u'SERIOUSINJURY',
+       u'OTHERINJURY', u'NONINJURED', u'MALES', u'FEMALES', u'BICYCLIST',
+       u'PASSENGER', u'DRIVER', u'PEDESTRIAN', u'PILLION', u'MOTORIST',
+       u'UNKNOWN', u'PED_CYCLIST_5_12', u'PED_CYCLIST_13_18',
+       u'OLD_PEDESTRIAN', u'OLD_DRIVER', u'YOUNG_DRIVER', u'ALCOHOL_RELATED',
+       u'UNLICENCSED', u'NO_OF_VEHICLES', u'HEAVYVEHICLE', u'PASSENGERVEHICLE',
+       u'MOTORCYCLE', u'PUBLICVEHICLE', u'DEG_URBAN_NAME', u'DEG_URBAN_ALL',
+       u'LGA_NAME_ALL', u'REGION_NAME_ALL', u'SRNS', u'SRNS_ALL', u'RMA',
+       u'RMA_ALL', u'DIVIDED', u'DIVIDED_ALL', u'STAT_DIV_NAME'],
+      dtype='object')
+df1 = df[['ACCIDENT_NO', 'ACCIDENT_DATE','ALCOHOLTIME','ACCIDENT_TYPE','SPEED_ZONE','LGA_NAME_ALL','FATALITY']]
+df1.columns = ['accident','date','alcohol','type','speed_zone','area','fatality']
+# from memory copy
+df1 = df1.copy()
+drunk = df1[df1['alcohol'] == 'Yes']
+drunk.head()
+accident	date	alcohol	type	speed_zone	area	fatality
+5	T20120013221	6/6/2012	Yes	Collision with vehicle	70 km/hr	LATROBE	0
+6	T20120013223	6/6/2012	Yes	Struck Pedestrian	70 km/hr	YARRA,DAREBIN	0
+11	T20120013621	11/6/2012	Yes	Collision with vehicle	100 km/hr	MELTON	0
+13	T20120013625	7/1/2012	Yes	Collision with vehicle	60 km/hr	MOUNT ALEXANDER	0
+17	T20120013631	7/6/2012	Yes	Collision with a fixed object	90 km/hr	WYNDHAM	0
+drunk.shape
+(28349, 7)
+df1.shape
+(76451, 7)
+28349.0/76451
+0.3708126774012112
+drunk[drunk['fatality'] > 0]['accident'].count()
+639
+drunk['accident'].count()
+28349
+639.0/28349.0
+0.02254047761825814
+undrunk = df1[df1['alcohol'] == 'No']
+undrunk[undrunk['fatality'] > 0]['accident'].count()
+692
+692.0/28349.0
+0.024410032099897703
+df1.head()
+accident	date	alcohol	type	speed_zone	area	fatality
+0	T20120013207	26/5/2012	No	Collision with vehicle	60 km/hr	BOROONDARA	0
+1	T20120013209	6/6/2012	No	Collision with vehicle	60 km/hr	PORT PHILLIP	0
+2	T20120013212	24/5/2012	No	Collision with vehicle	40 km/hr	YARRA	0
+3	T20120013213	6/6/2012	No	Struck Pedestrian	50 km/hr	WHITEHORSE	0
+4	T20120013219	22/5/2012	No	Collision with vehicle	80 km/hr	KNOX	0
+df1['date'] = 
+df1.to_csv('Drunkdata.csv')
+#df1.sort_values('area')['area']
